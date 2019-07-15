@@ -79,13 +79,14 @@ public class MusicChartResource {
 
 		String chartJSON = "";
 		String errorJSON = "";
+		JsonNode errorNode = null;
 		try {
 			chartJSON = mapper.writeValueAsString(chart);
 
-			JsonNode rootNode = mapper.createObjectNode();
-			((ObjectNode) rootNode).put("error", "Something went wrong!");
-			errorJSON = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(rootNode);
+			errorNode = mapper.createObjectNode();
+			errorJSON = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(errorNode);
 		} catch (JsonProcessingException e) {
+			((ObjectNode) errorNode).put("error", e.getMessage());
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorJSON);
 		}
 
