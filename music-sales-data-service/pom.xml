@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>io.java.spring.microservices</groupId>
-	<artifactId>music-sales-data-service</artifactId>
+	<artifactId>chart-position-data-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>music-sales-data-service</name>
+	<name>chart-position-data-service</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>

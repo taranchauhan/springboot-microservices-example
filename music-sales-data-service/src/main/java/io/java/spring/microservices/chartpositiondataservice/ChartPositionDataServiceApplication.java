@@ -1,13 +1,13 @@
-package io.java.spring.microservices.musicsalesdataservice;
+package io.java.spring.microservices.chartpositiondataservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MusicSalesDataServiceApplication {
+public class ChartPositionDataServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MusicSalesDataServiceApplication.class, args);
+		SpringApplication.run(ChartPositionDataServiceApplication.class, args);
 	}
-
+	
 }
