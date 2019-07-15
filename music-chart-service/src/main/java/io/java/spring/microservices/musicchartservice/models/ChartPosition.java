@@ -1,7 +1,6 @@
 package io.java.spring.microservices.musicchartservice.models;
 
 public class ChartPosition {
-
 	private String musicTrackId;
 	private int chartPosition;
 	private int weeksOnChart;
@@ -18,9 +17,11 @@ public class ChartPosition {
 		this.weeksOnChart = weeksOnChart;
 		this.peakPosition = peakPosition;
 	}
+
 	public String getMusicTrackId() {
 		return musicTrackId;
 	}
+	
 	public void setMusicTrackId(String musicTrackId) {
 		this.musicTrackId = musicTrackId;
 	}

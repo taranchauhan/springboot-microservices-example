@@ -4,15 +4,26 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import io.java.spring.microservices.musicchartservice.helpers.ChartItemComparator;
+import io.java.spring.microservices.musicchartservice.helpers.ChartItemCustomSerializer;
 import io.java.spring.microservices.musicchartservice.models.ChartItem;
 import io.java.spring.microservices.musicchartservice.models.ChartPosition;
 import io.java.spring.microservices.musicchartservice.models.MusicTrack;
@@ -24,9 +35,9 @@ public class MusicChartResource {
 	List<ChartPosition> chartPositions;
 	List<ChartItem> chart;
 
-	public MusicChartResource() {
-		RestTemplate getChartPositionsTemplate = new RestTemplate();
-		ResponseEntity<List<ChartPosition>> response = getChartPositionsTemplate.exchange(
+	@Autowired
+	public MusicChartResource(RestTemplate restTemplate) {
+		ResponseEntity<List<ChartPosition>> response = restTemplate.exchange(
 		  "http://localhost:8082/positions",
 		  HttpMethod.GET,
 		  null,
@@ -35,8 +46,8 @@ public class MusicChartResource {
 		
 		chart = chartPositions.stream()
 				.map(position -> { 
-					RestTemplate getMusicTrackTemplate = new RestTemplate();
-					MusicTrack musicTrack = getMusicTrackTemplate.getForObject("http://localhost:8081/tracks/" + position.getMusicTrackId(), MusicTrack.class);
+					MusicTrack musicTrack = restTemplate.getForObject("http://localhost:8081/tracks/" + position.getMusicTrackId(), MusicTrack.class);
+
 					return new ChartItem(
 						musicTrack,
 						position
@@ -45,19 +56,41 @@ public class MusicChartResource {
 				.collect(Collectors.toList());
 	}
 
-	@RequestMapping("")
-	public List<ChartItem> getChart() {
+	@RequestMapping(value = "", method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<String> getChart() {
 		Collections.sort(chart, new ChartItemComparator());
-		return chart;
+		return parseResponse(chart);
 	}
 
-	@RequestMapping("/{artistName}")
-	public List<ChartItem> getChartItemsByArtist(@PathVariable String artistName) {
+	@RequestMapping(value = "/{artistName}", method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<String> getChartItemsByArtist(@PathVariable String artistName) {
 		List<ChartItem> tracksByArtist = chart.stream().filter(
 				chartItem -> chartItem.getTrack().getArtistName().toLowerCase().contains(artistName.toLowerCase()))
 				.collect(Collectors.toList());
 		Collections.sort(tracksByArtist, new ChartItemComparator());
 
-		return tracksByArtist;
+		return parseResponse(tracksByArtist);
+	}
+	
+	public ResponseEntity<String> parseResponse(List<ChartItem> chart) {
+		ObjectMapper mapper = new ObjectMapper();
+		 
+		SimpleModule module = new SimpleModule();
+		module.addSerializer(ChartItem.class, new ChartItemCustomSerializer());
+		mapper.registerModule(module);
+		 
+		String chartJSON = "";
+		String errorJSON = "";
+		try {
+			chartJSON = mapper.writeValueAsString(chart);
+			
+			JsonNode rootNode = mapper.createObjectNode();
+			((ObjectNode) rootNode).put("error", "Something went wrong!");
+			errorJSON = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(rootNode);
+		} catch (JsonProcessingException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorJSON);
+		}
+		
+		return new ResponseEntity<String>(chartJSON, HttpStatus.OK);
 	}
 }
