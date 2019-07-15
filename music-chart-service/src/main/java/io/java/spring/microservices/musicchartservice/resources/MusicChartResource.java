@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -27,6 +25,7 @@ import io.java.spring.microservices.musicchartservice.helpers.ChartItemCustomSer
 import io.java.spring.microservices.musicchartservice.models.ChartItem;
 import io.java.spring.microservices.musicchartservice.models.ChartPosition;
 import io.java.spring.microservices.musicchartservice.models.MusicTrack;
+import reactor.core.publisher.Flux;
 
 @RestController
 @RequestMapping("/chart")
@@ -36,33 +35,32 @@ public class MusicChartResource {
 	List<ChartItem> chart;
 
 	@Autowired
-	public MusicChartResource(RestTemplate restTemplate) {
-		ResponseEntity<List<ChartPosition>> response = restTemplate.exchange(
-		  "http://localhost:8082/positions",
-		  HttpMethod.GET,
-		  null,
-		  new ParameterizedTypeReference<List<ChartPosition>>(){});
-		chartPositions = response.getBody();
+	public MusicChartResource(WebClient.Builder webClientBuilder) {
+		Flux<ChartPosition> chartPositionsFlux = webClientBuilder.build()
+				.get()
+			    .uri("http://localhost:8082/positions")
+			    .accept(MediaType.APPLICATION_JSON)
+			    .retrieve()
+			    .bodyToFlux(ChartPosition.class);
 		
-		chart = chartPositions.stream()
-				.map(position -> { 
-					MusicTrack musicTrack = restTemplate.getForObject("http://localhost:8081/tracks/" + position.getMusicTrackId(), MusicTrack.class);
+		chartPositions = chartPositionsFlux.collectList().block();
+		
+		chart = chartPositions.stream().map(position -> {
+			MusicTrack musicTrack = webClientBuilder.build().get()
+					.uri("http://localhost:8081/tracks/" + position.getMusicTrackId()).retrieve()
+					.bodyToMono(MusicTrack.class).block();
 
-					return new ChartItem(
-						musicTrack,
-						position
-					);
-				})
-				.collect(Collectors.toList());
+			return new ChartItem(musicTrack, position);
+		}).collect(Collectors.toList());
 	}
 
-	@RequestMapping(value = "", method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> getChart() {
 		Collections.sort(chart, new ChartItemComparator());
 		return parseResponse(chart);
 	}
 
-	@RequestMapping(value = "/{artistName}", method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/{artistName}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> getChartItemsByArtist(@PathVariable String artistName) {
 		List<ChartItem> tracksByArtist = chart.stream().filter(
 				chartItem -> chartItem.getTrack().getArtistName().toLowerCase().contains(artistName.toLowerCase()))
@@ -71,26 +69,26 @@ public class MusicChartResource {
 
 		return parseResponse(tracksByArtist);
 	}
-	
+
 	public ResponseEntity<String> parseResponse(List<ChartItem> chart) {
 		ObjectMapper mapper = new ObjectMapper();
-		 
+
 		SimpleModule module = new SimpleModule();
 		module.addSerializer(ChartItem.class, new ChartItemCustomSerializer());
 		mapper.registerModule(module);
-		 
+
 		String chartJSON = "";
 		String errorJSON = "";
 		try {
 			chartJSON = mapper.writeValueAsString(chart);
-			
+
 			JsonNode rootNode = mapper.createObjectNode();
 			((ObjectNode) rootNode).put("error", "Something went wrong!");
 			errorJSON = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(rootNode);
 		} catch (JsonProcessingException e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorJSON);
 		}
-		
+
 		return new ResponseEntity<String>(chartJSON, HttpStatus.OK);
 	}
 }
