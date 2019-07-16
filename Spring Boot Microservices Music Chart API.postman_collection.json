@@ -1,0 +1,123 @@
+{
+	"info": {
+		"_postman_id": "2ac5673b-5837-4aea-aa74-9d821dedf4df",
+		"name": "Spring Boot Microservices Music Chart API",
+		"description": "Spring Boot Music Chart API using microservices",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Music chart microservice",
+			"item": [
+				{
+					"name": "GET Chart",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8762/chart",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8762",
+							"path": [
+								"chart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Chart items by Artist",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8762/chart/ed%20sheeran",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8762",
+							"path": [
+								"chart",
+								"ed%20sheeran"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Music track details microservice",
+			"item": [
+				{
+					"name": "GET Music track details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8762/tracks/bad-guy",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8762",
+							"path": [
+								"tracks",
+								"bad-guy"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Chart position data microservice",
+			"item": [
+				{
+					"name": "GET Chart position data for a music track",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8762/positions/bad-guy",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8762",
+							"path": [
+								"positions",
+								"bad-guy"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET All chart positions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8762/positions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8762",
+							"path": [
+								"positions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
