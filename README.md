@@ -28,7 +28,7 @@ The following installed:
 
 ## Running the microservices 
 
-<strong> NOTE: Run the projects in this order in separate windows so you can see the logs for each.</strong>
+<strong> NOTE: Run the projects in this order in separate Terminal windows so you can see the logs for each.</strong>
 1. discovery-server (This must be running before you start 2, 3 and 4)
 2. chart-position-data-service
 3. music-track-details-service
@@ -65,3 +65,5 @@ You can test running multiple instances of each microservice using
 and navigating to http://localhost:8761 which is the Eureka server GUI.
 
 It will show you all of the running microservices and how many instances of each are up and running.
+
+<strong>NOTE: Inspect the logs of each application in the Terminal to see what is happening in detail. (In particular the Eureka discovery server and the Zuul Proxy Gateway server)</strong>
