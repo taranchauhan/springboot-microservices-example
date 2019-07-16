@@ -12,7 +12,7 @@ A Spring Boot Microservices example consisting of the following microservices:
 
 The postman collection can be found at `Spring Boot Microservices Music Chart API.postman_collection.json`
 
-#### The repository also includes Netflix Spring Cloud open source libraries
+#### The repository also includes Netflix Spring Cloud open source libraries:
 1. Netflix Eureka discovery server <strong>(Eureka server UI can be accessed at http://localhost:8761 and shows all running service instances)</strong>
 	1. It can discover all of the client microservices and how many instances of each are up and running.
 	2. It can notify the existence of running microservices to the Zuul Proxy gateway server so the proxy knows which routes are available to forward to.
@@ -60,8 +60,11 @@ You will notice that a single request URL http://localhost:8762 is used because 
 
 Zuul uses Ribbon to automatically load balance requests when forwarding to each microservice.
 
-You can test running multiple instances of each microservice using:
-`java -Dserver.port=<PORT> -jar <NAME_OF_JAR>.jar` and navigating to http://localhost:8761 which is the Eureka server GUI.
+#### You can test running multiple instances of each microservice:
+
+`java -Dserver.port=<PORT> -jar <NAME_OF_JAR>.jar`
+
+Navigate to http://localhost:8761 to see more information of these instances in the Eureka server GUI.
 
 It will show you all of the running microservices and how many instances of each are up and running.
 
