@@ -1,4 +1,4 @@
-package io.java.spring.microservices.musicsalesdataservice;
+package io.java.spring.microservices.chartpositiondataservice;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,7 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class MusicSalesDataServiceApplicationTests {
+public class ChartPositionDataServiceApplicationTests {
 
 	@Test
 	public void contextLoads() {
