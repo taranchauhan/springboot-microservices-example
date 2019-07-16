@@ -3,14 +3,17 @@ package io.java.spring.microservices.chartpositiondataservice.resources;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.cloud.netflix.ribbon.RibbonClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.java.spring.microservices.chartpositiondataservice.configuration.RibbonConfiguration;
 import io.java.spring.microservices.chartpositiondataservice.models.ChartPosition;
 
 @RestController
 @RequestMapping("/positions")
+@RibbonClient(name="chart-position-data-service", configuration = RibbonConfiguration.class)
 public class ChartPositionResource {
 	
 	private List<ChartPosition> chartPositions;

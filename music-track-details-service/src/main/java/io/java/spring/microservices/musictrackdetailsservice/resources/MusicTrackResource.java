@@ -3,14 +3,17 @@ package io.java.spring.microservices.musictrackdetailsservice.resources;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.cloud.netflix.ribbon.RibbonClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.java.spring.microservices.musictrackdetailsservice.configuration.RibbonConfiguration;
 import io.java.spring.microservices.musictrackdetailsservice.models.MusicTrack;
 
 @RestController
 @RequestMapping("/tracks")
+@RibbonClient(name="music-track-details-service", configuration = RibbonConfiguration.class)
 public class MusicTrackResource {
 
 	@RequestMapping("/{musicTrackId}")
