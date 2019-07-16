@@ -48,6 +48,8 @@ The following installed:
 	
 ## Testing the microservices using POSTman
 
+<strong> NOTE: Please allow a minute or two for the Zuul proxy routes to register once the application has started </strong>
+
 Once each application is up and running:
 
 Import the Postman collection into Postman and test out calling each of the microservices.
