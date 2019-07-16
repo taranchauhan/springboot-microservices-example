@@ -26,7 +26,7 @@ The following installed:
 
 ## Running the microservices 
 
-<strong> NOTE: Run the projects in this order</strong
+<strong> NOTE: Run the projects in this order</strong>
 1. discovery-server
 2. chart-position-data-service
 3. music-track-details-service
