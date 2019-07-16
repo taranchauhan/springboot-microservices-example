@@ -1,5 +1,7 @@
 # Spring Boot Microservices example
 
+## Description
+
 A Spring Boot Microservices example consisting of the following microservices:
 1. Music chart service
 	1. Makes a single GET call to the chart position data service to retrieve all of the music tracks on the current chart
@@ -10,7 +12,7 @@ A Spring Boot Microservices example consisting of the following microservices:
 
 The postman collection can be found at `Spring Boot Microservices Music Chart API.postman_collection.json`
 
-The repository also includes:
+#### The repository also includes Netflix Spring Cloud open source libraries
 1. Netflix Eureka discovery server <strong>(Eureka server UI can be accessed at http://localhost:8761 and shows all running service instances)</strong>
 	1. It can discover all of the client microservices and how many instances of each are up and running.
 	2. It can notify the existence of running microservices to the Zuul Proxy gateway server so the proxy knows which routes are available to forward to.
