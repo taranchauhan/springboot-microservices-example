@@ -24,21 +24,25 @@ The following installed:
 1. Java (JDK 8)
 2. Maven
 
-## Running from the command line
+## Running the microservices 
+
+<strong> NOTE: Run the projects in this order</strong
+1. discovery-server
+2. chart-position-data-service
+3. music-track-details-service
+4. music-chart-service
+5. zuul-gateway-proxy-server
+
+## From the command line
 
 1. Run `mvn clean install` inside each of the subfolders.
-2. Run `java -jar target/<NAME_OF_JAR>.jar` to start each of the Spring Boot microservices from each subfolder.
+2. In the order specified above, Run `java -jar target/<NAME_OF_JAR>.jar` to start each of the Spring Boot microservices from each subfolder.
 
-## Running from Spring Tool Suite
+## From Spring Tool Suite
 
 1. Import each of the subfolders as Maven projects into Spring Tool Suite.
 2. Wait for the Maven dependencies to be installed.
-3. Run the projects in this order by <strong>Right clicking on each project -> Run as -> Spring Boot app</strong>:
-	1. discovery-server
-	2. chart-position-data-service
-	3. music-track-details-service
-	4. music-chart-service
-	5. zuul-gateway-proxy-server
+3. In the order specified above <strong>Right click on each project -> Run as -> Spring Boot app</strong> (
 	
 ## Testing the microservices using POSTman
 
