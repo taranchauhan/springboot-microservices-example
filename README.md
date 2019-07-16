@@ -35,7 +35,7 @@ The following installed:
 
 ## From the command line
 
-1. Run `mvn clean install` inside each of the subfolders to generate the JAR for that microservice. You can find the name of the JAR inside the `target/` folder e.g. for chart-position-data-microservice, the JAR is called `chart-position-data-service-0.0.1-SNAPSHOT.jar`
+1. Run `mvn clean install` inside each of the subfolders to generate the JAR for that microservice. You can find the name of the JAR inside the `target/` folder e.g. for the `chart-position-data-microservice`, the JAR is called `chart-position-data-service-0.0.1-SNAPSHOT.jar`
 2. In the order specified above, Run `java -jar target/<NAME_OF_JAR>.jar` to start each of the Spring Boot microservices from each subfolder.
 
 ## From Spring Tool Suite
