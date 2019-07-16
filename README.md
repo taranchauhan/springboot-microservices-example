@@ -29,6 +29,19 @@ The following installed:
 1. Run `mvn clean install` inside each of the subfolders.
 2. Run `java -jar target/<NAME_OF_JAR>.jar` to start each of the Spring Boot microservices from each subfolder.
 
+## Running from Spring Tool Suite
+
+1. Import each of the subfolders as Maven projects into Spring Tool Suite.
+2. Wait for the Maven dependencies to be installed.
+3. Run the projects in this order by <strong>Right clicking on each project -> Run as -> Spring Boot app</strong>:
+	1. discovery-server
+	2. chart-position-data-service
+	3. music-track-details-service
+	4. music-chart-service
+	5. zuul-gateway-proxy-server
+	
+## Testing the microservices using POSTman
+
 Once each application is up and running:
 
 Import the Postman collection into Postman and test out calling each of the microservices.
