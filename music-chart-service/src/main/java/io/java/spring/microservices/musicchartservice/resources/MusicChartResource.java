@@ -38,7 +38,7 @@ public class MusicChartResource {
 	public MusicChartResource(WebClient.Builder webClientBuilder) {
 		Flux<ChartPosition> chartPositionsFlux = webClientBuilder.build()
 				.get()
-			    .uri("http://localhost:8082/positions")
+			    .uri("http://chart-position-data-service/positions")
 			    .accept(MediaType.APPLICATION_JSON)
 			    .retrieve()
 			    .bodyToFlux(ChartPosition.class);
@@ -47,7 +47,7 @@ public class MusicChartResource {
 		
 		chart = chartPositions.stream().map(position -> {
 			MusicTrack musicTrack = webClientBuilder.build().get()
-					.uri("http://localhost:8081/tracks/" + position.getMusicTrackId()).retrieve()
+					.uri("http://music-track-details-service/tracks/" + position.getMusicTrackId()).retrieve()
 					.bodyToMono(MusicTrack.class).block();
 
 			return new ChartItem(musicTrack, position);
