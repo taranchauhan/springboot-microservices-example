@@ -26,12 +26,12 @@ The following installed:
 
 ## Running the microservices 
 
-<strong> NOTE: Run the projects in this order in separate Shells so you can see the logs for each.</strong>
+<strong> NOTE: Run the projects in this order in separate windows so you can see the logs for each.</strong>
 1. discovery-server (This must be running before you start 2, 3 and 4)
 2. chart-position-data-service
 3. music-track-details-service
 4. music-chart-service
-5. zuul-gateway-proxy-server
+5. zuul-gateway-proxy-server (Wait for 1, 2, 3 and 4 to be running before starting this)
 
 ## From the command line
 
@@ -42,7 +42,7 @@ The following installed:
 
 1. Import each of the subfolders as Maven projects into Spring Tool Suite.
 2. Wait for the Maven dependencies to be installed.
-3. In the order specified above <strong>Right click on each project -> Run as -> Spring Boot app</strong> (
+3. In the order specified above, <strong>Right click on each project -> Run as -> Spring Boot app</strong>
 	
 ## Testing the microservices using POSTman
 
