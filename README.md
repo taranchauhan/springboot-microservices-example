@@ -52,7 +52,7 @@ The following installed:
 
 Once each application is up and running:
 
-Import the Postman collection into Postman and test out calling each of the microservices.
+Import the Postman collection into Postman and test out invoking each of the microservice API's.
 
 The postman collection can be found at `Spring Boot Microservices Music Chart API.postman_collection.json`
 
@@ -60,9 +60,7 @@ You will notice that a single request URL http://localhost:8762 is used because 
 
 Zuul uses Ribbon to automatically load balance requests when forwarding to each microservice.
 
-You can test running multiple instances of each microservice using
-`java -Dserver.port=<PORT> -jar <NAME_OF_JAR>.jar`
-and navigating to http://localhost:8761 which is the Eureka server GUI.
+You can test running multiple instances of each microservice using `java -Dserver.port=<PORT> -jar <NAME_OF_JAR>.jar` and navigating to http://localhost:8761 which is the Eureka server GUI.
 
 It will show you all of the running microservices and how many instances of each are up and running.
 
