@@ -35,39 +35,42 @@ public class MusicChartResource {
 	List<ChartItem> chart;
 
 	@Autowired
-	public MusicChartResource(WebClient.Builder webClientBuilder) {
-		Flux<ChartPosition> chartPositionsFlux = webClientBuilder.build()
-				.get()
-			    .uri("http://chart-position-data-service/positions")
-			    .accept(MediaType.APPLICATION_JSON)
-			    .retrieve()
-			    .bodyToFlux(ChartPosition.class);
-		
-		chartPositions = chartPositionsFlux.collectList().block();
-		
-		chart = chartPositions.stream().map(position -> {
-			MusicTrack musicTrack = webClientBuilder.build().get()
-					.uri("http://music-track-details-service/tracks/" + position.getMusicTrackId()).retrieve()
-					.bodyToMono(MusicTrack.class).block();
-
-			return new ChartItem(musicTrack, position);
-		}).collect(Collectors.toList());
-	}
+	WebClient.Builder webClientBuilder;
 
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> getChart() {
+		fetchData();
 		Collections.sort(chart, new ChartItemComparator());
 		return parseResponse(chart);
 	}
 
 	@RequestMapping(value = "/{artistName}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> getChartItemsByArtist(@PathVariable String artistName) {
+		fetchData();
 		List<ChartItem> tracksByArtist = chart.stream().filter(
 				chartItem -> chartItem.getTrack().getArtistName().toLowerCase().contains(artistName.toLowerCase()))
 				.collect(Collectors.toList());
 		Collections.sort(tracksByArtist, new ChartItemComparator());
 
 		return parseResponse(tracksByArtist);
+	}
+
+	public void fetchData() {
+		if (chartPositions == null && chart == null) {
+			Flux<ChartPosition> chartPositionsFlux = webClientBuilder.build().get()
+					.uri("http://chart-position-data-service/positions").accept(MediaType.APPLICATION_JSON).retrieve()
+					.bodyToFlux(ChartPosition.class);
+
+			chartPositions = chartPositionsFlux.collectList().block();
+
+			chart = chartPositions.stream().map(position -> {
+				MusicTrack musicTrack = webClientBuilder.build().get()
+						.uri("http://music-track-details-service/tracks/" + position.getMusicTrackId()).retrieve()
+						.bodyToMono(MusicTrack.class).block();
+
+				return new ChartItem(musicTrack, position);
+			}).collect(Collectors.toList());
+		}
 	}
 
 	public ResponseEntity<String> parseResponse(List<ChartItem> chart) {
