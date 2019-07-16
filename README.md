@@ -27,7 +27,7 @@ The following installed:
 ## Running from the command line
 
 1. Run `mvn clean install` inside each of the subfolders.
-2. Run `java -jar target/<NAME_OF_JAR>.jar` to start the Spring Boot microservices in each subfolder.
+2. Run `java -jar target/<NAME_OF_JAR>.jar` to start each of the Spring Boot microservices from each subfolder.
 
 Once each application is up and running:
 
